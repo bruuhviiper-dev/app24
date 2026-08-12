@@ -45,7 +45,7 @@ class MessageNotificationScreen extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const Text('🙏', style: TextStyle(fontSize: 46)),
+                      const Text('🌱', style: TextStyle(fontSize: 46)),
                       const SizedBox(height: 18),
                       Text(
                         message,
@@ -75,7 +75,7 @@ class MessageNotificationScreen extends StatelessWidget {
                           if (context.mounted) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Frase copiada 🙏')),
+                                  content: Text('Frase copiada 🌱')),
                             );
                           }
                         },

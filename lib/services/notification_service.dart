@@ -63,7 +63,7 @@ class NotificationService {
     final body = GreetingGenerator.ofNow().replaceAll('{nome}', 'você');
     await _plugin.zonedSchedule(
       _dailyId,
-      'Frases da Vida 🙏',
+      'Frases da Vida 🌱',
       body,
       _nextInstance(hour, minute),
       NotificationDetails(

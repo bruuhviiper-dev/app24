@@ -14,7 +14,7 @@ class Verse {
   /// Texto pronto pra compartilhar (com assinatura + link do app = tráfego orgânico).
   String get shareText {
     final base = reference.isEmpty ? text : '$text\n— $reference';
-    return '$base\n\n🙏 ${AppInfo.appName}\n${AppInfo.shareFooter}';
+    return '$base\n\n🌱 ${AppInfo.appName}\n${AppInfo.shareFooter}';
   }
 }
 

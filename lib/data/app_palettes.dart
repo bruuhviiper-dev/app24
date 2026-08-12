@@ -24,9 +24,9 @@ class AppPalettes {
 
   static const classico = AppPalette(
     id: 'classico',
-    name: 'Clássico',
-    accent: Color(0xFFC9A227),
-    gradient: [Color(0xFFF6D365), Color(0xFFC9A227)],
+    name: 'Vida',
+    accent: Color(0xFF12A150),
+    gradient: [Color(0xFF11998E), Color(0xFF38EF7D)],
     premium: false,
   );
 
@@ -40,9 +40,9 @@ class AppPalettes {
         productId: 'theme_dourado'),
     AppPalette(
         id: 'oliveira',
-        name: 'Oliveira',
+        name: 'Floresta',
         accent: Color(0xFF2E7D32),
-        gradient: [Color(0xFF11998E), Color(0xFF38EF7D)],
+        gradient: [Color(0xFF134E5E), Color(0xFF71B280)],
         productId: 'theme_oliveira'),
     AppPalette(
         id: 'ceu',

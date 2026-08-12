@@ -162,7 +162,7 @@ class _CreateScreenState extends State<CreateScreen> {
           File('${dir.path}/aniversario_${DateTime.now().millisecondsSinceEpoch}.png');
       await file.writeAsBytes(bytes);
       await Share.shareXFiles([XFile(file.path)],
-          text: noWatermark ? '' : '🙏 ${AppInfo.appName}\n${AppInfo.shareFooter}');
+          text: noWatermark ? '' : '🌱 ${AppInfo.appName}\n${AppInfo.shareFooter}');
     } finally {
       if (mounted) setState(() => _busy = false);
     }

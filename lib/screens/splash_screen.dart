@@ -39,7 +39,7 @@ class SplashScreen extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Text('🙏', style: TextStyle(fontSize: 96)),
+                  const Text('🌱', style: TextStyle(fontSize: 96)),
                   const SizedBox(height: 22),
                   Text(
                     'Frases da Vida',

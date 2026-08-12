@@ -22,7 +22,7 @@ class HomeScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🙏  Frases da Vida'),
+        title: const Text('🌱  Frases da Vida'),
         actions: [
           IconButton(
             tooltip: 'Lembrete diário',
@@ -97,7 +97,7 @@ class _MessageOfDay extends StatelessWidget {
     final state = context.watch<AppState>();
     final grad = state.palette.gradient;
     final text = state.personalize(GreetingGenerator.ofNow());
-    final share = '$text\n\n🙏 ${AppInfo.appName}\n${AppInfo.shareFooter}';
+    final share = '$text\n\n🌱 ${AppInfo.appName}\n${AppInfo.shareFooter}';
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.fromLTRB(22, 18, 12, 6),

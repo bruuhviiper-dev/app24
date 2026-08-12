@@ -24,7 +24,7 @@ class MessagesScreen extends StatelessWidget {
     final itemCount = msgCount + (msgCount ~/ _every);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('🙏  Frases da Vida')),
+      appBar: AppBar(title: const Text('🌱  Frases da Vida')),
       body: ListView.builder(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
         itemCount: itemCount,
@@ -38,7 +38,7 @@ class MessagesScreen extends StatelessWidget {
           }
           final msgIndex = (i ~/ _block) * _every + (i % _block);
           final text = state.personalize(GreetingGenerator.byIndex(msgIndex));
-          final share = '$text\n\n🙏 ${AppInfo.appName}\n${AppInfo.shareFooter}';
+          final share = '$text\n\n🌱 ${AppInfo.appName}\n${AppInfo.shareFooter}';
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             child: Padding(
