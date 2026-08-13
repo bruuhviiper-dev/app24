@@ -11,7 +11,7 @@ class AdsService with WidgetsBindingObserver {
   AdsService._();
   static final AdsService instance = AdsService._();
 
-  static const bool _useTestAds = true;
+  static const bool _useTestAds = false;
 
   // IDs de TESTE oficiais do Google
   static const _testBanner = 'ca-app-pub-3940256099942544/6300978111';
@@ -19,11 +19,11 @@ class AdsService with WidgetsBindingObserver {
   static const _testRewarded = 'ca-app-pub-3940256099942544/5224354917';
   static const _testAppOpen = 'ca-app-pub-3940256099942544/9257395921';
 
-  // IDs reais (preencher na publicação)
-  static const _realBanner = 'ca-app-pub-0000000000000000/0000000000';
-  static const _realInterstitial = 'ca-app-pub-0000000000000000/0000000000';
-  static const _realRewarded = 'ca-app-pub-0000000000000000/0000000000';
-  static const _realAppOpen = 'ca-app-pub-0000000000000000/0000000000';
+  // IDs reais (app24 — Frases da Vida)
+  static const _realBanner = 'ca-app-pub-5880219350817278/4656128517';
+  static const _realInterstitial = 'ca-app-pub-5880219350817278/5857529547';
+  static const _realRewarded = 'ca-app-pub-5880219350817278/8728215404';
+  static const _realAppOpen = 'ca-app-pub-5880219350817278/2162807053';
   static bool _ph(String id) => id.contains('0000000000');
 
   bool _initialized = false;
