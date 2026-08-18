@@ -27,13 +27,16 @@ class VerseData {
   static const _refletir = [Color(0xFF134E5E), Color(0xFF71B280)];
   static const _forca = [Color(0xFF485563), Color(0xFF29323c)];
 
+  /// Cross-product REAL: cada ideia (A) combina com cada arremate (B),
+  /// gerando a.length × b.length frases únicas por categoria (variedade alta).
   static List<Verse> _mix(List<String> a, List<String> b) {
-    final total = a.length * b.length;
     final seen = <String>{};
     final out = <Verse>[];
-    for (var i = 0; i < total; i++) {
-      final t = '${a[i % a.length]} ${b[i % b.length]}';
-      if (seen.add(t)) out.add(Verse(t));
+    for (final x in a) {
+      for (final y in b) {
+        final t = '$x $y';
+        if (seen.add(t)) out.add(Verse(t));
+      }
     }
     return out;
   }
@@ -534,6 +537,124 @@ class VerseData {
     'De pé, sempre.',
   ];
 
+  // ============ CATEGORIAS EXTRA (uso amplo, estilo top de mercado) ============
+  static const _fotos = [Color(0xFFc471f5), Color(0xFFfa71cd)];
+  static const _status = [Color(0xFF4facfe), Color(0xFF00f2fe)];
+  static const _amorproprio = [Color(0xFFee9ca7), Color(0xFFb24592)];
+  static const _positivas = [Color(0xFF43e97b), Color(0xFF38f9d7)];
+  static const _indiretas = [Color(0xFFcb356b), Color(0xFFbd3f32)];
+  static const _inteligentes = [Color(0xFF614385), Color(0xFF516395)];
+
+  static const _fotosA = [
+    'Sorria, a vida é uma boa foto.',
+    'Colecionando momentos, não coisas.',
+    'Foco no que me faz bem.',
+    'Menos perfeição, mais verdade.',
+    'Vivendo e aprendendo.',
+    'Feliz e sem precisar explicar.',
+    'O melhor ainda está por vir.',
+    'Fazendo da vida a minha arte.',
+    'Do meu jeito, sempre.',
+    'Brilhando na minha essência.',
+    'Momento perfeito é atitude, não sorte.',
+    'Gratidão por mais um clique.',
+  ];
+  static const _fotosB = [
+    '✨', '📸', 'e que venham os próximos.', 'porque eu mereço.', '💛',
+    'sempre.', 'do meu jeitinho.', 'e ponto final.', '🌷', 'sem filtro.',
+  ];
+  static const _statusA = [
+    'Seguindo em frente, sempre.',
+    'Paz interior acima de tudo.',
+    'Escolhi ser feliz.',
+    'Foco, força e fé.',
+    'No meu tempo, do meu jeito.',
+    'Sorrindo apesar de tudo.',
+    'Um dia de cada vez.',
+    'Gratidão muda tudo.',
+    'Sendo minha melhor versão.',
+    'Deixa a vida me levar.',
+    'Bons pensamentos, boa vida.',
+    'Tudo passa — isso também vai passar.',
+  ];
+  static const _statusB = [
+    '💫', 'e segue o jogo.', 'sempre.', '🙏', 'e tá tudo bem.',
+    'no meu ritmo.', '✌️', 'com o coração leve.', '🌈', 'sem pressa.',
+  ];
+  static const _amorproprioA = [
+    'Eu sou o meu maior projeto.',
+    'Me escolher também é amor.',
+    'Aprendi a caber inteira em mim.',
+    'Meu bem-estar é prioridade.',
+    'Sou suficiente do jeito que sou.',
+    'Cuidar de mim é revolução.',
+    'Me amar foi o melhor recomeço.',
+    'Não me encolho pra ninguém.',
+    'A minha paz não tem preço.',
+    'Floresço quando cuido de mim.',
+    'Eu mereço o que eu ofereço.',
+    'Primeiro eu, com amor.',
+  ];
+  static const _amorproprioB = [
+    '💖', 'e isso basta.', 'sem culpa.', 'sempre.', 'porque eu importo.',
+    '🌸', 'e ponto.', 'com orgulho.', 'todos os dias.', '✨',
+  ];
+  static const _positivasA = [
+    'Hoje vai ser um bom dia.',
+    'Coisas boas estão a caminho.',
+    'Pensa leve, vive leve.',
+    'Tudo conspira a meu favor.',
+    'A energia boa sempre volta.',
+    'Acredite e vá em frente.',
+    'Cada dia é uma nova chance.',
+    'O bem que faço volta pra mim.',
+    'Escolho ver o lado bom.',
+    'A gratidão abre caminhos.',
+    'Sorria: funciona.',
+    'O universo ouve o meu sim.',
+  ];
+  static const _positivasB = [
+    '🌻', 'sempre.', 'confie.', '✨', 'e assim será.',
+    '💫', 'com fé.', 'e pronto.', 'todo dia.', '🙌',
+  ];
+  static const _indiretasA = [
+    'Quem tem que entender, entende.',
+    'Não é pra todos, é pra quem sabe.',
+    'Guardei o silêncio, não a razão.',
+    'Cada um colhe o que planta.',
+    'Meu sumiço já foi o recado.',
+    'Dou o valor que recebo.',
+    'Distância também é resposta.',
+    'Nem toda ausência é falta.',
+    'Fiz por merecer a minha paz.',
+    'Palavras levo, atitudes guardo.',
+    'A régua agora é outra.',
+    'Se tocou, era pra você.',
+  ];
+  static const _indiretasB = [
+    '🎯', 'e tá ótimo assim.', 'sem drama.', 'ponto.',
+    'entendedores entenderão.', '💅', 'e segue o baile.', 'de boa.',
+    'só isso.', '🙃',
+  ];
+  static const _inteligentesA = [
+    'Sabedoria é saber o que ignorar.',
+    'A mente que se abre não volta ao tamanho antigo.',
+    'Grandes ideias começam no silêncio.',
+    'Quem pensa longe caminha melhor.',
+    'A ignorância pesa mais que o conhecimento.',
+    'Aprender é o luxo que ninguém rouba.',
+    'A dúvida é o começo da sabedoria.',
+    'Ideias boas não têm pressa.',
+    'Simplicidade é o auge da sofisticação.',
+    'Pensar bem é viver melhor.',
+    'O sábio ouve mais do que fala.',
+    'A pergunta certa vale mais que mil respostas.',
+  ];
+  static const _inteligentesB = [
+    '🧠', '— e siga pensando.', 'sempre.', '💡', 'reflita.',
+    '📚', 'e evolua.', 'ponto.', 'de verdade.', '✍️',
+  ];
+
   static final List<VerseCategory> categories = [
     VerseCategory(id: 'reflexao', name: 'Reflexão', emoji: '🌿', gradient: _reflexao, verses: _mix(_reflexaoA, _reflexaoB)),
     VerseCategory(id: 'motivacao', name: 'Motivação', emoji: '🔥', gradient: _motivacao, verses: _mix(_motivacaoA, _motivacaoB)),
@@ -548,6 +669,12 @@ class VerseData {
     VerseCategory(id: 'curtas', name: 'Frases Curtas', emoji: '🌱', gradient: _curtas, verses: _mix(_curtasA, _curtasB)),
     VerseCategory(id: 'atitude', name: 'Foco e Atitude', emoji: '🎯', gradient: _atitude, verses: _mix(_atitudeA, _atitudeB)),
     VerseCategory(id: 'recomeco', name: 'Recomeço', emoji: '🌅', gradient: _recomeco, verses: _mix(_recomecoA, _recomecoB)),
+    VerseCategory(id: 'fotos', name: 'Legendas para Fotos', emoji: '📸', gradient: _fotos, verses: _mix(_fotosA, _fotosB)),
+    VerseCategory(id: 'status', name: 'Frases para Status', emoji: '💬', gradient: _status, verses: _mix(_statusA, _statusB)),
+    VerseCategory(id: 'amorproprio', name: 'Amor Próprio', emoji: '💖', gradient: _amorproprio, verses: _mix(_amorproprioA, _amorproprioB)),
+    VerseCategory(id: 'positivas', name: 'Frases Positivas', emoji: '✨', gradient: _positivas, verses: _mix(_positivasA, _positivasB)),
+    VerseCategory(id: 'indiretas', name: 'Indiretas', emoji: '🎯', gradient: _indiretas, verses: _mix(_indiretasA, _indiretasB)),
+    VerseCategory(id: 'inteligentes', name: 'Frases Inteligentes', emoji: '🧠', gradient: _inteligentes, verses: _mix(_inteligentesA, _inteligentesB)),
     VerseCategory(id: 'profunda', name: 'Sabedoria Profunda', emoji: '🌌', gradient: _profunda, premium: true, verses: _mix(_profundaA, _profundaB)),
     VerseCategory(id: 'refletir', name: 'Frases para Refletir', emoji: '🍃', gradient: _refletir, premium: true, verses: _mix(_refletirA, _refletirB)),
     VerseCategory(id: 'forca', name: 'Superação (Força)', emoji: '⛰️', gradient: _forca, premium: true, verses: _mix(_forcaA, _forcaB)),

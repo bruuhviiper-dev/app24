@@ -14,13 +14,11 @@ class CategoryScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('${category.emoji}  ${category.name}')),
-      body: SafeArea(
-        top: false,
-        child: ListView.builder(
-          padding: const EdgeInsets.only(top: 12, bottom: 24),
-          itemCount: category.verses.length,
-          itemBuilder: (context, i) => VerseTile(verse: category.verses[i]),
-        ),
+      body: ListView.builder(
+        padding: EdgeInsets.only(
+            top: 12, bottom: 24 + MediaQuery.of(context).padding.bottom),
+        itemCount: category.verses.length,
+        itemBuilder: (context, i) => VerseTile(verse: category.verses[i]),
       ),
       bottomNavigationBar: const BannerPlaceholder(),
     );
