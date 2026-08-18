@@ -49,7 +49,7 @@ class StoreProducts {
   );
 
   static const packExclusivas = StoreProduct(
-    id: 'pack_oracoes',
+    id: 'pack_vida',
     kind: ProductKind.pack,
     title: 'Pacote Exclusivo',
     description: 'Sabedoria Profunda, Frases para Refletir e Superação da Vida.',
@@ -86,9 +86,9 @@ class StoreProducts {
 
   /// Categorias bloqueadas até comprar o pacote (ou bundle/assinatura).
   static const Set<String> exclusiveCategoryIds = {
-    'poderosas',
+    'profunda',
+    'refletir',
     'forca',
-    'suplicas',
   };
 
   static const Set<String> subscriptionIds = {

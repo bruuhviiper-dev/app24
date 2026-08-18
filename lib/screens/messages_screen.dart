@@ -13,30 +13,22 @@ import '../widgets/share_helper.dart';
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
 
-  static const _every = 5; // mensagens entre banners
-  static const _block = _every + 1; // 5 mensagens + 1 banner
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final state = context.watch<AppState>();
     final msgCount = GreetingGenerator.total;
-    final itemCount = msgCount + (msgCount ~/ _every);
+    final itemCount = msgCount;
 
     return Scaffold(
       appBar: AppBar(title: const Text('🌱  Frases da Vida')),
+      bottomNavigationBar: const BannerPlaceholder(),
       body: ListView.builder(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+        padding: EdgeInsets.fromLTRB(16, 12, 16, 24 + MediaQuery.of(context).padding.bottom),
         itemCount: itemCount,
         itemBuilder: (context, i) {
-          // A cada bloco de 6 posições, a última (índice 5) é um banner.
-          if (i % _block == _every) {
-            return const Padding(
-              padding: EdgeInsets.only(bottom: 12),
-              child: BannerPlaceholder(),
-            );
-          }
-          final msgIndex = (i ~/ _block) * _every + (i % _block);
+          final msgIndex = i;
           final text = state.personalize(GreetingGenerator.byIndex(msgIndex));
           final share = '$text\n\n🌱 ${AppInfo.appName}\n${AppInfo.shareFooter}';
           return Card(
