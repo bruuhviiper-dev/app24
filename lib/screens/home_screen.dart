@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 
 import '../data/app_info.dart';
 import '../data/app_theme.dart';
-import '../data/greeting_generator.dart';
 import '../data/models.dart';
 import '../data/verses.dart';
 import '../services/app_state.dart';
@@ -96,7 +95,7 @@ class _MessageOfDay extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = context.watch<AppState>();
     final grad = state.palette.gradient;
-    final text = state.personalize(GreetingGenerator.ofNow());
+    final text = state.personalize(VerseData.ofDay());
     final share = '$text\n\n🌱 ${AppInfo.appName}\n${AppInfo.shareFooter}';
     return Container(
       width: double.infinity,
