@@ -42,6 +42,10 @@ class AdsService with WidgetsBindingObserver {
   int _actionsSinceLastAd = 0;
   DateTime? _lastInterstitialShown;
 
+  /// App-open DESATIVADO (política "anúncio leve": banner + intersticial com
+  /// trava, sem anúncio ao abrir/voltar pro app). Reversível.
+  bool appOpenEnabled = false;
+
   String get bannerUnitId =>
       (_useTestAds || _ph(_realBanner)) ? _testBanner : _realBanner;
   String get _interstitialUnitId =>
@@ -57,7 +61,7 @@ class AdsService with WidgetsBindingObserver {
     MobileAds.instance.initialize();
     WidgetsBinding.instance.addObserver(this);
     _preloadInterstitial();
-    _loadAppOpen();
+    if (appOpenEnabled) _loadAppOpen();
   }
 
   @override
@@ -176,6 +180,7 @@ class AdsService with WidgetsBindingObserver {
   }
 
   void maybeShowAppOpen() {
+    if (!appOpenEnabled) return;
     if (!_supported || adsRemoved || _showingFullScreenAd) return;
     final now = DateTime.now();
     if (_lastAppOpenShown != null &&

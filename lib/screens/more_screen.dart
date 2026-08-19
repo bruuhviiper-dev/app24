@@ -45,12 +45,25 @@ class MoreScreen extends StatelessWidget {
                 Share.share('Conheça o ${AppInfo.appName}! ${AppInfo.playUrl}'),
           ),
           const Divider(height: 8),
-          ListTile(
-            leading: const Icon(Icons.apps_rounded),
-            title: const Text('Mais apps da Phantom Tecnologia'),
-            subtitle: const Text('Veja todos os nossos apps na Play Store'),
-            trailing: const Icon(Icons.open_in_new_rounded, size: 18),
-            onTap: () => _open(AppInfo.devUrl),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16, 16, 16, 6),
+            child: Text('Mais apps da Phantom 💜',
+                style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
+          ),
+          for (final app in AppInfo.otherApps)
+            ListTile(
+              leading: const Icon(Icons.apps_rounded, color: Color(0xFF7C3AED)),
+              title: Text(app.$1),
+              trailing: const Icon(Icons.open_in_new_rounded, size: 18),
+              onTap: () => _open(AppInfo.playUrlFor(app.$2)),
+            ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
+            child: OutlinedButton.icon(
+              onPressed: () => _open(AppInfo.devUrl),
+              icon: const Icon(Icons.storefront_rounded),
+              label: const Text('Ver todos os apps'),
+            ),
           ),
           const SizedBox(height: 20),
           Center(

@@ -25,7 +25,7 @@ class AppState extends ChangeNotifier {
   static const _kTempPro = 'temp_pro_until';
   static const _kRecipient = 'recipient_name';
 
-  static const String pRemoveAds = 'remove_ads';
+  static const String pRemoveAds = 'no_ads';
   static const String pWatermark = 'remove_watermark';
   static const String pBundle = 'premium_bundle';
   static const String pPack = 'pack_oracoes';
@@ -122,13 +122,12 @@ class AppState extends ChangeNotifier {
       _entitlements.contains(pRemoveAds) || hasBundle;
 
   /// Pode compartilhar imagens sem a marca d'água (assinatura).
-  bool get canRemoveWatermark =>
-      _entitlements.contains(pWatermark) || hasBundle || hasTemporaryPro;
+  bool get canRemoveWatermark => true; // sem marca d'água (grátis pra todos)
 
   /// Tem acesso às categorias exclusivas (pacote, bundle ou assinatura).
   bool get ownsExclusivePack => ownsProduct(pPack) || hasTemporaryPro;
 
-  bool isCategoryLocked(bool premium) => premium && !ownsExclusivePack;
+  bool isCategoryLocked(bool premium) => false; // tudo grátis
 
   // ----- temas -----
   AppPalette get palette => AppPalettes.byId(_paletteId);
