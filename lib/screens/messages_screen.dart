@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
-import '../data/app_info.dart';
 import '../data/greeting_generator.dart';
-import '../services/app_state.dart';
-import '../widgets/banner_ad.dart';
 import '../widgets/share_helper.dart';
+import 'create_screen.dart';
 
-/// Lista "infinita" de mensagens geradas (sem IA, offline), com um banner a
-/// cada 5 mensagens.
+/// Lista "infinita" de frases geradas (sem IA, offline). O banner fica no shell
+/// (rodapé fixo), sem duplicar.
 class MessagesScreen extends StatelessWidget {
   const MessagesScreen({super.key});
 
@@ -17,20 +14,18 @@ class MessagesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
-    final state = context.watch<AppState>();
     final msgCount = GreetingGenerator.total;
     final itemCount = msgCount;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('🌱  Frases da Vida')),
-      bottomNavigationBar: const BannerPlaceholder(),
+      appBar: AppBar(title: const Text('Frases da Vida')),
       body: ListView.builder(
         padding: EdgeInsets.fromLTRB(16, 12, 16, 24 + MediaQuery.of(context).padding.bottom),
         itemCount: itemCount,
         itemBuilder: (context, i) {
           final msgIndex = i;
-          final text = state.personalize(GreetingGenerator.byIndex(msgIndex));
-          final share = '$text\n\n🌱 ${AppInfo.appName}\n${AppInfo.shareFooter}';
+          final text = GreetingGenerator.byIndex(msgIndex);
+          final share = '$text\n\n🌅 Frases da Vida';
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             child: Padding(
@@ -48,11 +43,6 @@ class MessagesScreen extends StatelessWidget {
                               color: scheme.primary)),
                       const Spacer(),
                       IconButton(
-                        tooltip: 'Editar',
-                        icon: const Icon(Icons.edit_rounded, size: 20),
-                        onPressed: () => _edit(context, text),
-                      ),
-                      IconButton(
                         tooltip: 'Copiar',
                         icon: const Icon(Icons.copy_rounded, size: 20),
                         onPressed: () async {
@@ -63,6 +53,13 @@ class MessagesScreen extends StatelessWidget {
                             );
                           }
                         },
+                      ),
+                      IconButton(
+                        tooltip: 'Criar imagem',
+                        icon: const Icon(Icons.image_rounded, size: 20),
+                        onPressed: () => Navigator.of(context, rootNavigator: true)
+                            .push(MaterialPageRoute(
+                                builder: (_) => CreateScreen(initialText: text))),
                       ),
                       IconButton(
                         tooltip: 'Compartilhar',
@@ -76,70 +73,6 @@ class MessagesScreen extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
-  }
-
-  /// Editar a frase antes de copiar/compartilhar (autonomia do usuário).
-  void _edit(BuildContext context, String initial) {
-    final c = TextEditingController(text: initial);
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      showDragHandle: true,
-      builder: (ctx) => Padding(
-        padding: EdgeInsets.fromLTRB(
-            16, 0, 16, MediaQuery.of(ctx).viewInsets.bottom + 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const Padding(
-              padding: EdgeInsets.only(bottom: 8),
-              child: Text('Editar frase',
-                  style: TextStyle(fontWeight: FontWeight.w800, fontSize: 16)),
-            ),
-            TextField(
-              controller: c,
-              maxLines: 5,
-              minLines: 3,
-              autofocus: true,
-              textCapitalization: TextCapitalization.sentences,
-              decoration: InputDecoration(
-                filled: true,
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-                    borderSide: BorderSide.none),
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () async {
-                      await ShareHelper.copy(c.text.trim());
-                      if (ctx.mounted) Navigator.pop(ctx);
-                    },
-                    icon: const Icon(Icons.copy_rounded),
-                    label: const Text('Copiar'),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: FilledButton.icon(
-                    onPressed: () {
-                      Navigator.pop(ctx);
-                      ShareHelper.share(c.text.trim());
-                    },
-                    icon: const Icon(Icons.share_rounded),
-                    label: const Text('Compartilhar'),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
       ),
     );
   }

@@ -1,16 +1,18 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../data/app_info.dart';
 import '../data/app_theme.dart';
 import '../data/models.dart';
+import '../data/story_backgrounds.dart';
 import '../data/verses.dart';
 import '../services/app_state.dart';
 import '../widgets/share_helper.dart';
+import '../widgets/verse_image.dart';
 import 'category_screen.dart';
+import 'create_screen.dart';
 import 'messages_screen.dart';
-import 'settings_screen.dart';
 import 'store_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -21,17 +23,8 @@ class HomeScreen extends StatelessWidget {
     final state = context.watch<AppState>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('🌱  Frases da Vida'),
+        title: const Text('Frases da Vida'),
         actions: [
-          IconButton(
-            tooltip: 'Lembrete diário',
-            icon: Icon(state.reminderOn
-                ? Icons.notifications_active_rounded
-                : Icons.notifications_none_rounded),
-            onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(builder: (_) => const SettingsScreen()),
-            ),
-          ),
           if (!state.adsRemoved)
             IconButton(
               tooltip: 'Remover anúncios',
@@ -74,95 +67,118 @@ class HomeScreen extends StatelessWidget {
                     category: c, locked: state.isCategoryLocked(c.premium)),
             ],
           ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 0, 16, 20),
-            child: Center(
-              child: Text('By: ${AppInfo.developer}',
-                  style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                      fontWeight: FontWeight.w600)),
-            ),
-          ),
         ],
       ),
     );
   }
 }
 
-class _MessageOfDay extends StatelessWidget {
+class _MessageOfDay extends StatefulWidget {
+  @override
+  State<_MessageOfDay> createState() => _MessageOfDayState();
+}
+
+class _MessageOfDayState extends State<_MessageOfDay> {
+  final _key = GlobalKey();
+  bool _busy = false;
+
+  // Frase do dia (mesma lógica da notificação) + estilo dinâmico por sessão.
+  late final Verse _msg = Verse(VerseData.ofDay());
+  late final List<Color> _gradient =
+      StoryBg.all[Random().nextInt(StoryBg.all.length)].colors;
+
+  void _openEditor() {
+    Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute(builder: (_) => CreateScreen(initialText: _msg.text)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final state = context.watch<AppState>();
-    final grad = state.palette.gradient;
-    final text = state.personalize(VerseData.ofDay());
-    final share = '$text\n\n🌱 ${AppInfo.appName}\n${AppInfo.shareFooter}';
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.fromLTRB(22, 18, 12, 6),
-      decoration: BoxDecoration(
-        gradient: AppTheme.gradient(grad),
-        borderRadius: BorderRadius.circular(24),
-        boxShadow: [
-          BoxShadow(
-              color: grad.last.withValues(alpha: 0.35),
-              blurRadius: 20,
-              offset: const Offset(0, 10)),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    final share = '${_msg.text}\n\n🌅 Frases da Vida';
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 4, bottom: 8),
+          child: Row(
             children: [
-              const Icon(Icons.auto_awesome_rounded,
-                  color: Colors.white, size: 16),
-              const SizedBox(width: 6),
-              const Text('FRASE DO DIA',
+              Icon(Icons.auto_awesome_rounded, size: 16),
+              SizedBox(width: 6),
+              Text('FRASE DO DIA',
                   style: TextStyle(
-                      color: Colors.white,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.4,
                       fontSize: 12)),
             ],
           ),
-          const SizedBox(height: 12),
-          Text(text,
-              style: GoogleFonts.lora(
-                  color: Colors.white,
-                  fontSize: 19,
-                  height: 1.5,
-                  fontWeight: FontWeight.w500)),
-          Row(
-            children: [
-              TextButton.icon(
-                onPressed: () => Navigator.of(context).push(
-                  MaterialPageRoute(builder: (_) => const MessagesScreen()),
-                ),
-                style: TextButton.styleFrom(foregroundColor: Colors.white),
-                icon: const Icon(Icons.forum_rounded, size: 18),
-                label: const Text('Ver mais'),
-              ),
-              const Spacer(),
-              IconButton(
-                icon: const Icon(Icons.copy_rounded, color: Colors.white),
-                onPressed: () async {
-                  await ShareHelper.copy(share);
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Copiado!')),
-                    );
-                  }
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.share_rounded, color: Colors.white),
-                onPressed: () => ShareHelper.share(share),
-              ),
-            ],
+        ),
+        GestureDetector(
+          onTap: _openEditor,
+          child: Container(
+            height: 230,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(24),
+              boxShadow: [
+                BoxShadow(
+                    color: _gradient.last.withValues(alpha: 0.35),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10)),
+              ],
+            ),
+            child: VerseImageCard(
+              verse: _msg,
+              gradient: _gradient,
+              captureKey: _key,
+            ),
           ),
-        ],
-      ),
+        ),
+        Row(
+          children: [
+            TextButton.icon(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const MessagesScreen()),
+              ),
+              icon: const Icon(Icons.forum_rounded, size: 18),
+              label: const Text('Ver mais'),
+            ),
+            const Spacer(),
+            IconButton(
+              tooltip: 'Copiar',
+              icon: const Icon(Icons.copy_rounded),
+              onPressed: () async {
+                await ShareHelper.copy(share);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Copiado!')),
+                  );
+                }
+              },
+            ),
+            IconButton(
+              tooltip: 'Criar imagem',
+              icon: const Icon(Icons.image_rounded),
+              onPressed: _openEditor,
+            ),
+            IconButton(
+              tooltip: 'Compartilhar imagem',
+              icon: _busy
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2))
+                  : const Icon(Icons.share_rounded),
+              onPressed: _busy
+                  ? null
+                  : () async {
+                      setState(() => _busy = true);
+                      await shareVerseImage(_key);
+                      if (mounted) setState(() => _busy = false);
+                    },
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
@@ -174,14 +190,19 @@ class _CategoryTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final grad = category.gradient;
+    const nameShadow = [
+      Shadow(color: Colors.black26, blurRadius: 6, offset: Offset(0, 1)),
+    ];
     return Container(
       decoration: BoxDecoration(
+        gradient: AppTheme.gradient(grad),
         borderRadius: BorderRadius.circular(22),
         boxShadow: [
           BoxShadow(
-            color: category.gradient.last.withValues(alpha: 0.38),
-            blurRadius: 14,
-            offset: const Offset(0, 7),
+            color: grad.last.withValues(alpha: 0.38),
+            blurRadius: 16,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
@@ -189,87 +210,77 @@ class _CategoryTile extends StatelessWidget {
         color: Colors.transparent,
         borderRadius: BorderRadius.circular(22),
         clipBehavior: Clip.antiAlias,
-        child: Ink(
-          decoration: BoxDecoration(
-            gradient: AppTheme.gradient(category.gradient),
-            borderRadius: BorderRadius.circular(22),
+        child: InkWell(
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => locked
+                  ? const StoreScreen()
+                  : CategoryScreen(category: category),
+            ),
           ),
-          child: InkWell(
-            onTap: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                builder: (_) => locked
-                    ? const StoreScreen()
-                    : CategoryScreen(category: category),
+          child: Stack(
+            children: [
+              Positioned(
+                right: -10,
+                bottom: -14,
+                child: Icon(
+                  Icons.wb_twilight_rounded,
+                  size: 92,
+                  color: Colors.white.withValues(alpha: 0.13),
+                ),
               ),
-            ),
-            child: Stack(
-              children: [
-                Positioned(
-                  right: -12,
-                  bottom: -14,
-                  child: Text(
-                    category.emoji,
-                    style: TextStyle(
-                      fontSize: 92,
-                      color: Colors.white.withValues(alpha: 0.12),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withValues(alpha: 0.20),
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                            child: Text(category.emoji,
-                                style: const TextStyle(fontSize: 24)),
+              Padding(
+                padding: const EdgeInsets.all(15),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          width: 46,
+                          height: 46,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            color: Colors.white.withValues(alpha: 0.22),
+                            shape: BoxShape.circle,
                           ),
-                          const Spacer(),
-                          if (locked)
-                            const Icon(Icons.lock_rounded,
-                                color: Colors.white, size: 20)
-                          else
-                            Icon(Icons.arrow_forward_rounded,
-                                color: Colors.white.withValues(alpha: 0.85),
-                                size: 20),
-                        ],
-                      ),
-                      const Spacer(),
-                      Text(category.name,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              height: 1.15,
-                              fontWeight: FontWeight.w800,
-                              shadows: [
-                                Shadow(
-                                    color: Colors.black26,
-                                    blurRadius: 4,
-                                    offset: Offset(0, 1)),
-                              ])),
-                      const SizedBox(height: 3),
-                      Text(
+                          child: Text(category.emoji,
+                              style: const TextStyle(fontSize: 24)),
+                        ),
+                        const Spacer(),
+                        Icon(
                           locked
-                              ? 'Exclusivo'
-                              : '${category.verses.length} frases',
-                          style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.9),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600)),
-                    ],
-                  ),
+                              ? Icons.lock_rounded
+                              : Icons.arrow_forward_rounded,
+                          color: Colors.white.withValues(alpha: 0.9),
+                          size: 19,
+                        ),
+                      ],
+                    ),
+                    const Spacer(),
+                    Text(category.name,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 17,
+                          height: 1.1,
+                          fontWeight: FontWeight.w800,
+                          shadows: nameShadow,
+                        )),
+                    const SizedBox(height: 3),
+                    Text(
+                        locked
+                            ? 'Exclusivo'
+                            : '${category.verses.length} frases',
+                        style: TextStyle(
+                            color: Colors.white.withValues(alpha: 0.92),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600)),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

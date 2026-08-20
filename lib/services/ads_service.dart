@@ -46,6 +46,10 @@ class AdsService with WidgetsBindingObserver {
   /// trava, sem anúncio ao abrir/voltar pro app). Reversível.
   bool appOpenEnabled = false;
 
+  /// Intersticial DESLIGADO — política "só banner": sem anúncio de tela cheia.
+  /// Reversível (basta voltar para true).
+  bool interstitialEnabled = false;
+
   String get bannerUnitId =>
       (_useTestAds || _ph(_realBanner)) ? _testBanner : _realBanner;
   String get _interstitialUnitId =>
@@ -60,7 +64,7 @@ class AdsService with WidgetsBindingObserver {
     _initialized = true;
     MobileAds.instance.initialize();
     WidgetsBinding.instance.addObserver(this);
-    _preloadInterstitial();
+    if (interstitialEnabled) _preloadInterstitial();
     if (appOpenEnabled) _loadAppOpen();
   }
 
@@ -132,6 +136,7 @@ class AdsService with WidgetsBindingObserver {
   /// Conta uma ação relevante e exibe o intersticial ao atingir o limite
   /// (intervalo mínimo de 60s). Não exibe pra quem removeu anúncios.
   void registerActionAndMaybeShow() {
+    if (!interstitialEnabled) return;
     if (!_supported || adsRemoved || _showingFullScreenAd) return;
     _actionsSinceLastAd++;
     if (_actionsSinceLastAd < interstitialEvery) return;
